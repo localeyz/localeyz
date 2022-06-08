@@ -6,27 +6,43 @@ We are still working on our documentation, if you would like to contribute pleas
 
 You can connect with us through these channels:
 
-Slack (localeyz.slack.com)
+
+:speech_balloon:
+### Slack (localeyz.slack.com)
+We use Slack to communicate together, ask questions, and all things co-op!
+
 Upon requesting to join and receiving approval, please update your profile to include your full namme, job title, center name, and contact information.
 
-Report bugs in the #bugs channel on Slack. 
+:bug: Report bugs in the #bugs channel on Slack. 
 Explore the other channels through the Slack channel explorer. 
 
-GitHub Discussions (Questions, Feature Requests)
+:+1:
+[GitHub Discussions for Feature Requests and other Ideas] (https://github.com/localeyz/localeyz/discussions)
 
-Twitter (Latest News)
+:eyes:
+Social Media
+Twitter 
 
-Vimeo (Video Tutorials)
+LinkedIn
 
+Facebook
+
+
+:book: Vimeo (Video Tutorials)
+
+------------------------
+
+:pushpin: :pushpin: :pushpin: 
 # The 80/20 Rule
 
-To keep the Localeyz codebase as clean and simple as possible, we will only consider approving features that we feel at least 80% of our user-base will find valuable. If your feature request falls within the 20% range, it is considered an edge-case and should be implemented as an extension.
+To keep the Localeyz codebase as clean and simple as possible, we will only consider approving features that we feel at least 80% of our user-base will find valuable. If your feature request falls within the 20% range, it is considered an edge-case where you can directly sponsor the feature through a capital contribution.
+------------------------
 
 
 # Code of Conduct
-The Directus Code of Conduct (opens new window)is one of the ways we put our values into practice. We expect all of our staff, contractors and contributors to know and follow this code.
+The Localeyz Code of Conduct (opens new window)is one of the ways we put our values into practice. We expect all of our staff, contractors and contributors to know and follow this code.
 
-Our contributors and maintainers work extremely hard to build Directus as premium open-source software. Please be respectful of those efforts throughout our ecosystem. Trolling, harassing, insulting, or other unacceptable behavior by participants will not be tolerated.
+Our contributors and maintainers work extremely hard to build the Localeyz Platform. Please be respectful of those efforts throughout our ecosystem. Trolling, harassing, insulting, or other unacceptable behavior by participants will not be tolerated.
 
 In the interest of fostering an open and welcoming environment, we as pledge to make participation in our project and community a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation.
 
@@ -35,8 +51,7 @@ Examples of behavior that contributes to creating a positive environment include
 Using welcoming and inclusive language
 Being respectful of differing viewpoints and experiences
 Gracefully accepting constructive criticism
-Focusing on what is best for the community
-Showing empathy towards other community members
-Before continuing, please take a moment to read our full Code of Conduct (opens new window).
+Focusing on what is best for the Cooperative
+Showing empathy towards other members
 
 #
