@@ -1,0 +1,61 @@
+{
+	"name": "directus-extension-localeyz",
+	"description": "Please enter a description for your extension",
+	"icon": "extension",
+	"version": "1.0.0",
+	"keywords": [
+		"directus",
+		"directus-extension",
+		"directus-custom-bundle"
+	],
+	"type": "module",
+	"directus:extension": {
+		"type": "bundle",
+		"path": {
+			"app": "dist/app.js",
+			"api": "dist/api.js"
+		},
+		"entries": [
+			{
+				"type": "hook",
+				"name": "delete-aws-video",
+				"source": "src/routes/hooks/deleteAwsVideoHooks.ts"
+			},
+			{
+				"type": "hook",
+				"name": "s3-to-file-library",
+				"source": "src/routes/hooks/s3ToFileLibraryHooks.ts"
+			},
+			{
+				"type": "hook",
+				"name": "users",
+				"source": "src/routes/hooks/users.ts"
+			},
+			{
+				"type": "hook",
+				"name": "podcasts",
+				"source": "src/routes/hooks/podcasts.ts"
+			},
+			{
+				"type": "endpoint",
+				"name": "sso",
+				"source": "src/routes/endpoints/sso.ts"
+			}
+		],
+		"host": "^10.3.1"
+	},
+	"scripts": {
+		"build": "directus-extension build",
+		"dev": "directus-extension build -w --no-minify",
+		"link": "directus-extension link",
+		"add": "directus-extension add"
+	},
+	"devDependencies": {
+		"@directus/extensions-sdk": "10.3.1",
+		"@types/uuid": "^9.0.8"
+	},
+	"dependencies": {
+		"jsonwebtoken": "^9.0.2",
+		"podcast-feed-parser": "^1.0.4"
+	}
+}
