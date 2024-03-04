@@ -45,6 +45,11 @@
 				"type": "endpoint",
 				"name": "telvue",
 				"source": "src/routes/endpoints/telvue.ts"
+			},
+			{
+				"type": "hook",
+				"name": "global",
+				"source": "src/routes/hooks/global.ts"
 			}
 		],
 		"host": "^10.3.1"
