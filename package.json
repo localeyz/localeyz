@@ -18,7 +18,8 @@
     "directus-extension-localeyz": "./custom/bundles/localeyz/",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.8.0",
-    "podcast-feed-parser": "^1.0.4"
+    "podcast-feed-parser": "^1.0.4",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.41.0",

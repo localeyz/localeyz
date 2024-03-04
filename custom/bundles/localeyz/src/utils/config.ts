@@ -25,6 +25,7 @@ const ACCOUNTABILITY = {
 const SECRET = process.env.SECRET;
 
 //  Public URL for accessing resources.
-const PUBLIC_URL = process.env.PUBLIC_URL
+const PUBLIC_URL = process.env.PUBLIC_URL;
+const TELVUE_URL = process.env.TELVUE_URL;
 
-export { S3_CONFIG, TOKEN, ACCOUNTABILITY, SECRET, PUBLIC_URL };
+export { S3_CONFIG, TOKEN, ACCOUNTABILITY, SECRET, PUBLIC_URL, TELVUE_URL };
