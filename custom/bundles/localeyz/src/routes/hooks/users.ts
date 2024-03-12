@@ -27,11 +27,13 @@ export default ({ action, filter }: any, { services, database }: any) => {
   })
 
   // Define filter for deleting users
-  filter('users.items.delete', async (keys: string[], _: any, { schema }: any) => {
-    // Execute the userDelete function from the users controller for deleting users
-    await userDelete(keys, _, database, UsersService, ItemsService, schema)
-
-  })
+  filter(
+    'users.items.delete',
+    async (keys: string[], _: any, { schema }: any) => {
+      // Execute the userDelete function from the users controller for deleting users
+      await userDelete(keys, _, database, UsersService, ItemsService, schema)
+    }
+  )
 
   // Define action for updating users
   action(

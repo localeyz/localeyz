@@ -50,9 +50,9 @@ const syncUser = async (
     if (directusUser?.id) {
       const existingUser = userQuery
       let updates: {
-        linked_user?: string;
-        organization?: string;
-        role?: string;
+        linked_user?: string
+        organization?: string
+        role?: string
       } = {}
 
       // Check for updates in user data

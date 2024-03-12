@@ -100,8 +100,8 @@ const telvueSync = async (req: any, res: any, { services }: any) => {
           .join('&'),
         custom_metadata: episodeData.custom_field_value
           ? Object.entries(episodeData.custom_field_value)
-            ?.map(([key, value]) => `custom_metadata[${key}]=${value}`)
-            .join('&')
+              ?.map(([key, value]) => `custom_metadata[${key}]=${value}`)
+              .join('&')
           : null,
         api_key: serverData.api_key
       }
@@ -205,14 +205,15 @@ const telvueConnectSync = async (req: any, res: any, context: any) => {
     await Promise.all(
       queueData.map(async (data: string) => {
         const episodeData = await getEpisodeData(data, episodeService)
-        let xmlResponse;
-        await axios.get(`${TELVUE_URL}/content_metadata/${episodeData.telvue_id}.xml`)
-          .then(response => {
-            xmlResponse = response.data  // Process response data 
+        let xmlResponse
+        await axios
+          .get(`${TELVUE_URL}/content_metadata/${episodeData.telvue_id}.xml`)
+          .then((response) => {
+            xmlResponse = response.data // Process response data
           })
-          .catch(error => {
-            console.error(error.message);      // Handle error 
-          });
+          .catch((error) => {
+            console.error(error.message) // Handle error
+          })
         const xmlData = xmlResponse
         if (xmlData) {
           const { telvue_connect_id, stream_url } =
