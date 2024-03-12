@@ -1,13 +1,13 @@
-import crypto from 'crypto';
+import crypto from 'crypto'
 
 // Polyfill for the global crypto object if not already defined
 if (typeof global.crypto !== 'object') {
-    global.crypto = crypto;
+  global.crypto = crypto
 }
 
 // Polyfill for the getRandomValues function if not already defined
 if (typeof global.crypto.getRandomValues !== 'function') {
-    global.crypto.getRandomValues = getRandomValues;
+  global.crypto.getRandomValues = getRandomValues
 }
 
 /**
@@ -16,6 +16,6 @@ if (typeof global.crypto.getRandomValues !== 'function') {
  * @returns {Uint32Array} - The array filled with random values.
  */
 function getRandomValues(array) {
-    // Use Node.js crypto module to generate random values
-    return crypto.webcrypto.getRandomValues(array);
+  // Use Node.js crypto module to generate random values
+  return crypto.webcrypto.getRandomValues(array)
 }

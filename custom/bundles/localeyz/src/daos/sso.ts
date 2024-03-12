@@ -2,23 +2,23 @@
  * Interface representing a user.
  */
 interface User {
-    id: Promise<any>;
-    email?: string | undefined;
-    role?: {
-        id: string | undefined;
-        app_access: boolean | undefined;
-        admin_access: boolean | undefined;
-    };
+  id: Promise<any>
+  email?: string | undefined
+  role?: {
+    id: string | undefined
+    app_access: boolean | undefined
+    admin_access: boolean | undefined
+  }
 }
 
 /**
  * Interface representing a role.
  */
 interface Role {
-    id: string;
-    name: string;
-    app_access: boolean;
-    admin_access: boolean;
+  id: string
+  name: string
+  app_access: boolean
+  admin_access: boolean
 }
 
 /**
@@ -27,17 +27,19 @@ interface Role {
  * @param {any} usersService - The service used to interact with users.
  * @returns {Promise<User[]>} - A promise that resolves to an array of user(s) matching the email.
  */
-const getUserByEmail = async (email: string, usersService: any): Promise<User[]> => {
-    return await usersService.readByQuery({
-        fields: ['*', 'role.*'],
-        filter: {
-            email: {
-                _eq: email
-            }
-        }
-    });
+const getUserByEmail = async (
+  email: string,
+  usersService: any
+): Promise<User[]> => {
+  return await usersService.readByQuery({
+    fields: ['*', 'role.*'],
+    filter: {
+      email: {
+        _eq: email
+      }
+    }
+  })
 }
-
 
 /**
  * Retrieves all roles from the database.
@@ -45,9 +47,9 @@ const getUserByEmail = async (email: string, usersService: any): Promise<User[]>
  * @returns {Promise<Role[]>} - A promise that resolves to an array of all roles.
  */
 const getAllRoles = async (rolesService: any): Promise<Role[]> => {
-    return await rolesService.readByQuery({
-        fields: ['id', 'name', 'app_access', 'admin_access']
-    });
+  return await rolesService.readByQuery({
+    fields: ['id', 'name', 'app_access', 'admin_access']
+  })
 }
 
 /**
@@ -60,17 +62,24 @@ const getAllRoles = async (rolesService: any): Promise<Role[]> => {
  * @param {any} usersService - The service used to interact with users.
  * @returns {Promise<any>} - A promise that resolves to the ID of the created user.
  */
-const createUser = async (req: any, email: string, id: string | undefined, foundRole: Role | undefined, organization: string | undefined, usersService: any): Promise<any> => {
-    const userData: any = {
-        email,
-        provider: 'email',
-        name: req?.body?.name,
-    };
-    if (id) userData.linked_user = id;
-    if (foundRole?.id) userData.role = foundRole.id;
-    if (organization) userData.organization = organization;
+const createUser = async (
+  req: any,
+  email: string,
+  id: string | undefined,
+  foundRole: Role | undefined,
+  organization: string | undefined,
+  usersService: any
+): Promise<any> => {
+  const userData: any = {
+    email,
+    provider: 'email',
+    name: req?.body?.name
+  }
+  if (id) userData.linked_user = id
+  if (foundRole?.id) userData.role = foundRole.id
+  if (organization) userData.organization = organization
 
-    return await usersService.createOne(userData);
+  return await usersService.createOne(userData)
 }
 
 /**
@@ -83,15 +92,22 @@ const createUser = async (req: any, email: string, id: string | undefined, found
  * @param {any} usersService - The service used to interact with users.
  * @returns {Promise<any>} - A promise that resolves once the user is updated.
  */
-const updateUser = async (req: any, user: User, id: string | undefined, foundRole: Role | undefined, organization: string | undefined, usersService: any): Promise<any> => {
-    const userData: any = {
-        name: req?.body?.name,
-    };
-    if (id) userData.linked_user = id;
-    if (foundRole?.id) userData.role = foundRole.id;
-    if (organization) userData.organization = organization;
+const updateUser = async (
+  req: any,
+  user: User,
+  id: string | undefined,
+  foundRole: Role | undefined,
+  organization: string | undefined,
+  usersService: any
+): Promise<any> => {
+  const userData: any = {
+    name: req?.body?.name
+  }
+  if (id) userData.linked_user = id
+  if (foundRole?.id) userData.role = foundRole.id
+  if (organization) userData.organization = organization
 
-    return await usersService.updateOne(user.id, userData);
+  return await usersService.updateOne(user.id, userData)
 }
 
 /**
@@ -103,14 +119,20 @@ const updateUser = async (req: any, user: User, id: string | undefined, foundRol
  * @param {any} accountability - The accountability data for the session.
  * @returns {Promise<void>} - A promise that resolves once the session is created.
  */
-const createSession = async (sessionService: any, accessToken: string | undefined, user: User | undefined, expiresDateTime: Date, accountability: any): Promise<void> => {
-    await sessionService.createOne({
-        token: accessToken,
-        user: user?.id,
-        expires: expiresDateTime,
-        ip: accountability?.ip,
-        user_agent: accountability?.userAgent
-    })
+const createSession = async (
+  sessionService: any,
+  accessToken: string | undefined,
+  user: User | undefined,
+  expiresDateTime: Date,
+  accountability: any
+): Promise<void> => {
+  await sessionService.createOne({
+    token: accessToken,
+    user: user?.id,
+    expires: expiresDateTime,
+    ip: accountability?.ip,
+    user_agent: accountability?.userAgent
+  })
 }
 
 /**
@@ -120,15 +142,26 @@ const createSession = async (sessionService: any, accessToken: string | undefine
  * @param {any} accountability - The accountability data for the activity.
  * @returns {Promise<void>} - A promise that resolves once the activity record is created.
  */
-const createActivity = async (activityService: any, user: User | undefined, accountability: any): Promise<void> => {
-    await activityService.createOne({
-        action: 'login',
-        user: user?.id,
-        ip: accountability.ip,
-        user_agent: accountability.userAgent,
-        collection: 'directus_users',
-        item: user?.id
-    });
+const createActivity = async (
+  activityService: any,
+  user: User | undefined,
+  accountability: any
+): Promise<void> => {
+  await activityService.createOne({
+    action: 'login',
+    user: user?.id,
+    ip: accountability.ip,
+    user_agent: accountability.userAgent,
+    collection: 'directus_users',
+    item: user?.id
+  })
 }
 
-export { getUserByEmail, getAllRoles, createUser, updateUser, createSession, createActivity };
+export {
+  getUserByEmail,
+  getAllRoles,
+  createUser,
+  updateUser,
+  createSession,
+  createActivity
+}

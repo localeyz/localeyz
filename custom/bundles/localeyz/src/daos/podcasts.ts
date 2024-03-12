@@ -5,10 +5,14 @@
  * @param {any} res - The response object containing the updated image ID.
  * @returns {Promise<any>} - A promise that resolves once the podcast image is updated.
  */
-const updatePodcastImage = async (database: any, keys: string, res: any): Promise<any> => {
-    return await database('podcasts')
-        .where('id', keys)
-        .update({ directus_image: res.data.data.id });
+const updatePodcastImage = async (
+  database: any,
+  keys: string,
+  res: any
+): Promise<any> => {
+  return await database('podcasts')
+    .where('id', keys)
+    .update({ directus_image: res.data.data.id })
 }
 
 /**
@@ -17,8 +21,13 @@ const updatePodcastImage = async (database: any, keys: string, res: any): Promis
  * @param {any} database - The database connection.
  * @returns {Promise<any>} - A promise that resolves to the episodes of the specified podcast.
  */
-const getPodcastEpisodes = async (podcastId: string, database: any): Promise<any> => {
-    return await database('podcast_episodes').where('podcast_id', podcastId).select('id')
+const getPodcastEpisodes = async (
+  podcastId: string,
+  database: any
+): Promise<any> => {
+  return await database('podcast_episodes')
+    .where('podcast_id', podcastId)
+    .select('id')
 }
 
 /**
@@ -28,9 +37,7 @@ const getPodcastEpisodes = async (podcastId: string, database: any): Promise<any
  * @returns {Promise<any>} - A promise that resolves once the episodes are deleted.
  */
 const deletePodcastEpisodes = async (toDelete: any, database: any) => {
-    return await database('podcast_episodes')
-        .whereIn('id', toDelete)
-        .del();
+  return await database('podcast_episodes').whereIn('id', toDelete).del()
 }
 
 /**
@@ -39,8 +46,11 @@ const deletePodcastEpisodes = async (toDelete: any, database: any) => {
  * @param {any} database - The database connection.
  * @returns {Promise<any>} - A promise that resolves once the episodes are created.
  */
-const createPodcastEpisodes = async (episodesToCreate: any, database: any): Promise<any> => {
-    return await database('podcast_episodes').insert(episodesToCreate)
+const createPodcastEpisodes = async (
+  episodesToCreate: any,
+  database: any
+): Promise<any> => {
+  return await database('podcast_episodes').insert(episodesToCreate)
 }
 
 /**
@@ -50,8 +60,12 @@ const createPodcastEpisodes = async (episodesToCreate: any, database: any): Prom
  * @param {any} database - The database connection.
  * @returns {Promise<any>} - A promise that resolves once the podcast is updated.
  */
-const updatePodcast = async (podcastId: string, podcast: any, database: any): Promise<any> => {
-    return await database('podcasts').where('id', podcastId).update(podcast)
+const updatePodcast = async (
+  podcastId: string,
+  podcast: any,
+  database: any
+): Promise<any> => {
+  return await database('podcasts').where('id', podcastId).update(podcast)
 }
 
 /**
@@ -60,8 +74,14 @@ const updatePodcast = async (podcastId: string, podcast: any, database: any): Pr
  * @returns {Promise<any>} - A promise that resolves to all podcasts in the database.
  */
 const getPodcasts = async (database: any): Promise<any> => {
-    return await database('podcasts')
-        .select('id', 'rss_feed', 'directus_image');
+  return await database('podcasts').select('id', 'rss_feed', 'directus_image')
 }
 
-export { updatePodcastImage, getPodcastEpisodes, deletePodcastEpisodes, createPodcastEpisodes, updatePodcast, getPodcasts }
+export {
+  updatePodcastImage,
+  getPodcastEpisodes,
+  deletePodcastEpisodes,
+  createPodcastEpisodes,
+  updatePodcast,
+  getPodcasts
+}

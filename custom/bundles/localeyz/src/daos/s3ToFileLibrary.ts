@@ -4,12 +4,12 @@
  * @returns {boolean} - Returns true if the URL is valid, false otherwise.
  */
 const isURLValid = (url: string): boolean => {
-    try {
-        new URL(url)
-        return true
-    } catch {
-        return false
-    }
+  try {
+    new URL(url)
+    return true
+  } catch {
+    return false
+  }
 }
 
 /**
@@ -19,8 +19,12 @@ const isURLValid = (url: string): boolean => {
  * @param {any} episodesService - The service used to interact with episodes.
  * @returns {Promise<void>} - A promise that resolves once the episode is updated.
  */
-const updateEpisode = async (keys: string, data: any, episodesService: any): Promise<void> => {
-    await episodesService.updateOne(keys, data)
+const updateEpisode = async (
+  keys: string,
+  data: any,
+  episodesService: any
+): Promise<void> => {
+  await episodesService.updateOne(keys, data)
 }
 
 export { isURLValid, updateEpisode }
