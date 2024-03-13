@@ -156,14 +156,6 @@ const processCollection = async (collection: any, service: any) => {
   }
 }
 
-const isValidURL = (url: string) => {
-  // Regular expression for URL validation
-  const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/
-
-  // Test the URL against the regular expression
-  return urlRegex.test(url)
-}
-
 //Processes data in chunks, extracting image URLs from the specified fields and uploading images.
 const chunkProcess = async (
   urlField: string,
@@ -184,7 +176,7 @@ const chunkProcess = async (
         const url = item.thumbnail_url || item.image || item.image_url // Extract the URL from the item's fields
 
         // Check if the URL is valid
-        if (isValidURL(url)) {
+        if (typeof url === 'string') {
           const token = createJwtToken(ACCOUNTABILITY) // Create a JWT token for Admin accountability
 
           // Request image processing and get the image ID asynchronously
