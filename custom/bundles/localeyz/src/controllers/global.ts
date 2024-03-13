@@ -197,12 +197,7 @@ const chunkProcess = async (
           // If image ID is obtained, upload it to the service
           if (imageId) {
             // Upload the image ID to the service
-            await uploadImage(
-              item.id,
-              imageId,
-              urlField === 'thumbnail_url' ? 'thumbnail' : 'directus_image',
-              service
-            )
+            await uploadImage(item.id, imageId, imageField, service)
           }
         }
       })
