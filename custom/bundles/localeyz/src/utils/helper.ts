@@ -1,40 +1,46 @@
+// Type definition for scheduling tasks
 type Schedule = (
   cronTab: string,
-  callback: (keys: string[], req: Request, res: Response) => Promise<any>
+  callback: (keys: string[], req: Request, res: Response) => Promise<any> // Schedule callback function signature
 ) => void
 
+// Type definition for triggering actions
 type Action = (
   eventName: string,
-  callback: (keys: Object, req: Request, res: Response) => Promise<void>
+  callback: (keys: Object, req: Request, res: Response) => Promise<void> // Action callback function signature
 ) => void
 
+// Interface for the ItemsService constructor
 interface ItemsService {
   new (collection: string, options: any): any
-  // Define other methods or properties if known
 }
 
+// Interface for the Custom extension hooks constructor
 interface ControllerOptions {
   services: {
-    ItemsService: ItemsService
+    ItemsService: ItemsService // Controller options for services
   }
-  database?: Object
-  getSchema: () => Promise<any>
+  database?: Object // Optional database object
+  getSchema: () => Promise<any> // Function to get schema as a promise
 }
 
+// Interface for the CRON constructor
 interface Cron {
-  action: Action
-  schedule: Schedule
+  action: Action // Interface for action
+  schedule: Schedule // Interface for schedule
 }
 
+// Interface for the  Accountability constructor
 interface Accountability {
-  userAgent?: any
-  user: string | undefined
-  role?: string // Allow undefined for role
-  admin: boolean
-  app: boolean
-  ip: string
+  userAgent?: any // Optional user agent
+  user: string | undefined // User string or undefined
+  role?: string // Role string or undefined
+  admin: boolean // Admin boolean
+  app: boolean // App boolean
+  ip: string // IP address string
 }
 
+// Interface for the Episodes constructor
 interface Episode {
   description: any
   enclosure: any
@@ -78,6 +84,7 @@ interface Episode {
   time?: string
 }
 
+// Interface for the Podcast-episodes constructor
 interface PodcastEpisode {
   id: number
   title?: string
@@ -88,9 +95,10 @@ interface PodcastEpisode {
   updated_at: Date
   podcast_id?: number
   published_at?: string
-  podcast_episodes_image?: string // Assuming this is a foreign key referencing a file ID
+  podcast_episodes_image?: string
 }
 
+// Interface for the Podcasts constructor
 interface Podcast {
   id?: number
   title?: string
@@ -103,7 +111,7 @@ interface Podcast {
   organization_id?: bigint
   published?: boolean
   user_id?: string
-  podcasts_image?: string // Assuming this is a foreign key referencing a file ID
+  podcasts_image?: string
   skipRecursion?: boolean
 }
 
@@ -133,6 +141,7 @@ interface Role {
   admin_access: boolean
 }
 
+// Interface for the Keys constructor
 interface Keys {
   collection?: string
   key?: string
@@ -141,7 +150,6 @@ interface Keys {
     image?: string
     image_url?: string
     thumbnail_url?: string
-    // Add other properties if necessary
   }
 }
 
