@@ -3,13 +3,12 @@ import { S3 } from '@aws-sdk/client-s3'
 import { v4 as uuidv4 } from 'uuid'
 import { S3_CONFIG } from '../utils/config'
 import { getEpisodes } from '../daos/deleteAwsVideo'
+import { ControllerOptions, Episode } from '../utils/helper'
 
 // Define the function for deleting AWS videos
 const deleteAwsVideo = async (
-  _req: any,
-  _res: any,
-  _keys: any,
-  context: { getSchema: any; services: any }
+  _keys: string[],
+  { getSchema, services }: ControllerOptions // Updated ControllerOptions
 ) => {
   // Set up AWS S3 clients
   const s3 = new S3({
@@ -27,9 +26,8 @@ const deleteAwsVideo = async (
   })
 
   // Get schema and initialize service options
-  const { getSchema, services } = context
   const { ItemsService } = services
-  const schema = await getSchema()
+  const schema = await getSchema() // Assume getSchema is a function
   const serviceOptions = {
     schema: schema
   }
@@ -42,8 +40,8 @@ const deleteAwsVideo = async (
   // Process episodes
   if (episodes?.length) {
     await Promise.all(
-      episodes.map(async (episode: any) => {
-        const videoUrl = episode.video_url
+      episodes.map(async (episode: Episode) => {
+        const videoUrl = episode?.video_url
         const s3Key = decodeURIComponent(videoUrl.split('/').slice(3).join('/'))
 
         try {

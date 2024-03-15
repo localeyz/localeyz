@@ -1,4 +1,5 @@
 import xml2js from 'xml2js'
+import { Episode } from '../utils/helper'
 
 // Function to fetch user data based on user ID
 const getUserData = async (user: string, usersService: any) => {
@@ -79,10 +80,10 @@ const createNotification = async (
 }
 
 // Function to extract Telvue ID from metadata
-const fetchTelvueId = async (data: any) => {
+const fetchTelvueId = async (data: string) => {
   let telvueId
   // Parsing XML to JavaScript object
-  xml2js.parseString(data, (err: any, result: any) => {
+  xml2js.parseString(data, (err, result) => {
     if (err) {
       console.error(err)
     } else {
@@ -128,18 +129,17 @@ const getTelvueEpisodeData = async (
   })
 }
 
-const createTelvueQueue = async (episodes: any, telvueQueueService: any) => {
-  try {
-    const queueData = await telvueQueueData(-1, telvueQueueService)
-    return episodes.map(async (episode: { episode_id: any }) => {
-      if (queueData.indexOf(episode.episode_id) === -1) {
-        await telvueQueueService.createOne(episode)
-      }
-      return null
-    })
-  } catch (error: any) {
-    throw error
-  }
+const createTelvueQueue = async (
+  episodes: Episode,
+  telvueQueueService: any
+) => {
+  const queueData = await telvueQueueData(-1, telvueQueueService)
+  return episodes.map(async (episode: { episode_id: string }) => {
+    if (queueData.indexOf(episode.episode_id) === -1) {
+      await telvueQueueService.createOne(episode)
+    }
+    return null
+  })
 }
 
 const telvueQueueData = async (limit: number, telvueQueueService: any) => {
@@ -147,14 +147,14 @@ const telvueQueueData = async (limit: number, telvueQueueService: any) => {
     fields: ['episode_id'],
     limit
   })
-  return queueData.map((data: { episode_id: any }) => data.episode_id)
+  return queueData.map((data: { episode_id: string }) => data.episode_id)
 }
 
 // Function to extract Telvue ID from metadata
-const fetchTelvueConnectData = async (data: any) => {
+const fetchTelvueConnectData = async (data: string) => {
   let telvue_connect_id, stream_url
   // Parsing XML to JavaScript object
-  xml2js.parseString(data, (err: any, result: any) => {
+  xml2js.parseString(data, (err, result) => {
     if (err) {
       console.error(err)
     } else {

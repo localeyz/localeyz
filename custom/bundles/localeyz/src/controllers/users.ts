@@ -49,7 +49,7 @@ const syncUser = async (
     const directusUser = directusUserQuery
     if (directusUser?.id) {
       const existingUser = userQuery
-      let updates: {
+      const updates: {
         linked_user?: string
         organization?: string
         role?: string

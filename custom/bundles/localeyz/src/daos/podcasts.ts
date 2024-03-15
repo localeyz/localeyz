@@ -1,33 +1,22 @@
 import xml2js from 'xml2js'
+import { Podcast, PodcastEpisode } from '../utils/helper'
 
-/**
- * Update the directus_image field of a podcast in the database.
- * @param {any} podcastService - The database connection.
- * @param {string} keys - The primary key(s) of the podcast to update.
- * @param {any} res - The response object containing the updated image ID.
- * @returns {Promise<any>} - A promise that resolves once the podcast image is updated.
- */
-/** */
+// Update the directus_image field of a podcast in the database.
 const updatePodcastImage = async (
   podcastService: any,
   keys: string,
-  res: any
-): Promise<any> => {
+  imageId: string
+): Promise<string> => {
   return await podcastService.updateOne(keys, {
-    directus_image: res.data.data.id
+    podcasts_image: imageId
   })
 }
 
-/**
- * Retrieve episodes of a podcast from the database.
- * @param {string} podcastId - The ID of the podcast.
- * @param {any} podcastEpisodesService - The database connection.
- * @returns {Promise<any>} - A promise that resolves to the episodes of the specified podcast.
- */
+// Retrieve episodes of a podcast from the database.
 const getPodcastEpisodes = async (
   podcastId: string,
   podcastEpisodesService: any
-): Promise<any> => {
+): Promise<{ id: string }> => {
   return await podcastEpisodesService.readByQuery({
     fields: ['id'],
     filter: {
@@ -37,17 +26,11 @@ const getPodcastEpisodes = async (
   })
 }
 
-/**
- * Delete podcast episodes from the database.
- * @param {any} toDelete - Array of episode IDs to delete.
- * @param {any} podcastEpisodesService - The database connection.
- * @returns {Promise<any>} - A promise that resolves once the episodes are deleted.
- */
-/** */
+//  Delete podcast episodes from the database.
 const deletePodcastEpisodes = async (
-  toDelete: any,
+  toDelete: string[],
   podcastEpisodesService: any
-): Promise<any> => {
+): Promise<void> => {
   return await podcastEpisodesService.deleteByQuery({
     filter: {
       id: {
@@ -58,44 +41,27 @@ const deletePodcastEpisodes = async (
   })
 }
 
-/**
- * Create podcast episodes in the database.
- * @param {any} episodesToCreate - Array of episodes to create.
- * @param {any} podcastEpisodesService - The database connection.
- * @returns {Promise<any>} - A promise that resolves once the episodes are created.
- */
-/** */
+//Create podcast episodes in the database.
 const createPodcastEpisodes = async (
-  episodesToCreate: any,
+  episodesToCreate: PodcastEpisode[],
   podcastEpisodesService: any
-): Promise<any> => {
+): Promise<string[]> => {
   return await podcastEpisodesService.createMany(episodesToCreate)
-  // return await database('podcast_episodes').insert(episodesToCreate)
 }
 
-/**
- * Update a podcast in the database.
- * @param {string} podcastId - The ID of the podcast to update.
- * @param {any} podcast - The updated podcast object.
- * @param {any} podcastService - The database connection.
- * @returns {Promise<any>} - A promise that resolves once the podcast is updated.
- */
+// Update a podcast in the database.
 const updatePodcast = async (
   podcastId: string,
-  podcast: any,
+  podcast: Podcast,
   podcastService: any
-): Promise<any> => {
+): Promise<string> => {
   return await podcastService.updateOne(podcastId, podcast)
 }
 
-/**
- * Retrieve all podcasts from the database.
- * @param {any} podcastService - The database connection.
- * @returns {Promise<any>} - A promise that resolves to all podcasts in the database.
- */
-const getPodcasts = async (podcastService: any): Promise<any> => {
+// Retrieve all podcasts from the database.
+const getPodcasts = async (podcastService: any): Promise<Podcast[]> => {
   return await podcastService.readByQuery({
-    fields: ['id', 'rss_feed', 'directus_image'],
+    fields: ['id', 'rss_feed', 'podcasts_image'],
     limit: -1
   })
 }
@@ -103,7 +69,7 @@ const getPodcasts = async (podcastService: any): Promise<any> => {
 const getParsedImageDetails = async (data: string) => {
   let episodes, channel
   // Parsing XML to JavaScript object
-  xml2js.parseString(data, (err: any, result: any) => {
+  xml2js.parseString(data, (err, result) => {
     if (err) {
       console.error(err)
     } else {

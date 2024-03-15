@@ -2,13 +2,14 @@ import axios from 'axios'
 import { isURLValid, updateEpisode } from '../daos/s3ToFileLibrary'
 import { PUBLIC_URL } from '../utils/config'
 import { createJwtToken } from './podcasts'
+import { Accountability, ControllerOptions } from '../utils/helper'
 
 // Handler function to handle thumbnail updates
 const handler = async (
   url: string | null | undefined,
   keys: string,
-  context: any,
-  accountability: any
+  context: ControllerOptions,
+  accountability: Accountability
 ) => {
   // Destructure services and getSchema from context
   const { services, getSchema } = context

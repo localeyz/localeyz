@@ -16,34 +16,40 @@ import {
   updateEpisode
 } from '../daos/telvue'
 import { ACCOUNTABILITY, TELVUE_URL } from '../utils/config'
+import { ControllerOptions } from '../utils/helper'
 
 // Function responsible for synchronizing data with Telvue
-const telvueSync = async (req: any, res: any, { services }: any) => {
+const telvueSync = async (
+  req: Request,
+  res: Response,
+  { services, getSchema }: ControllerOptions
+) => {
   try {
     const { ItemsService } = services // Destructuring ItemsService from services
     const { episodes, accountability } = req.body // Destructuring episodes and accountability from request body
+    const schema = await getSchema()
 
     const adminAccountability = ACCOUNTABILITY
 
     // Creating service instances for Directus collections
     const usersService = new ItemsService('directus_users', {
-      schema: req.schema,
+      schema: schema,
       accountability
     })
     const telvueService = new ItemsService('telvue_integrations', {
-      schema: req.schema,
+      schema: schema,
       accountability
     })
     const episodesService = new ItemsService('episodes', {
-      schema: req.schema,
+      schema: schema,
       adminAccountability
     })
     const programsService = new ItemsService('programs', {
-      schema: req.schema,
+      schema: schema,
       accountability
     })
     const notificationService = new ItemsService('directus_notifications', {
-      schema: req.schema,
+      schema: schema,
       adminAccountability
     })
 
@@ -94,7 +100,7 @@ const telvueSync = async (req: any, res: any, { services }: any) => {
         delete_datetime: episodeData.telvue_delete_at?.split('T')[0],
         categories: episodeData.topics
           ?.map(
-            (topic: { topic_id: { title: any } }) =>
+            (topic: { topic_id: { title: string } }) =>
               `categories[]=${encodeURIComponent(topic.topic_id.title)}`
           )
           .join('&'),
@@ -165,7 +171,7 @@ const telvueSync = async (req: any, res: any, { services }: any) => {
   }
 }
 
-const telvueConnectSync = async (req: any, res: any, context: any) => {
+const telvueConnectSync = async (context: ControllerOptions) => {
   try {
     const { getSchema, services } = context
     const { ItemsService } = services
@@ -187,12 +193,12 @@ const telvueConnectSync = async (req: any, res: any, context: any) => {
 
     // Process Telvue data in parallel
     await Promise.all(
-      telvueData.map(async (telvue: any) => {
+      telvueData.map(async (telvue: { organization_id: string }) => {
         const episodes = await getTelvueEpisodeData(
           telvue.organization_id,
           episodeService
         )
-        const episodeIDs = episodes.map((episode: any) => ({
+        const episodeIDs = episodes.map((episode: { id: string }) => ({
           episode_id: episode.id
         }))
         await createTelvueQueue(episodeIDs, telvueQueueService)

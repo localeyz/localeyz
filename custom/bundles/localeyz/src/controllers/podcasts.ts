@@ -10,9 +10,10 @@ import {
   updatePodcastImage
 } from '../daos/podcasts'
 import { ACCOUNTABILITY, PUBLIC_URL, SECRET } from '../utils/config'
+import { Accountability, ControllerOptions, Episode } from '../utils/helper'
 
 // Function to create JWT token
-const createJwtToken = (accountability: any) => {
+const createJwtToken = (accountability: Accountability) => {
   const { user, role, admin, app } = accountability
   const id = user
 
@@ -63,7 +64,7 @@ const handler = async ({
       }
     )
 
-    await updatePodcastImage(podcastService, keys, res)
+    await updatePodcastImage(podcastService, keys, res.data.data.id)
     return res.data.data.id
   } catch (error: any) {
     console.error('Error handling URL:', error, error.data)
@@ -75,24 +76,23 @@ const handler = async ({
 const run = async (
   podcastId: string,
   rssFeed: string,
-  context: { getSchema: any; services: any },
-  req: any,
-  res: any
+  context: ControllerOptions,
+  req: Request
 ) => {
   const { getSchema, services } = context
 
-  let accountability: any
-  let podcast: {
+  let accountability: Accountability
+  const podcast: {
     skipRecursion?: boolean
     title: string
     image: string
     description: string
-    directus_image: string
+    podcasts_image: string
   } = {
     title: '',
     image: '',
     description: '',
-    directus_image: ''
+    podcasts_image: ''
   }
   if (req) {
     accountability = req.accountability
@@ -123,7 +123,7 @@ const run = async (
     const metadata = (await getParsedImageDetails(parsed.data)).channel
 
     // Prepare episodes to create
-    const episodesToCreate = data?.map((episode: any) => {
+    const episodesToCreate = data?.map((episode: Episode) => {
       return {
         title: episode.title[0],
         published_at: episode.pubDate[0],
@@ -143,7 +143,7 @@ const run = async (
     )
 
     // Prepare episodes to delete
-    const toDelete = podcastEpisodes.map((e: any) => e.id)
+    const toDelete = podcastEpisodes.map((e: { id: string }) => e.id)
 
     // Delete existing podcast episodes if any
     if (toDelete.length > 0) {
@@ -171,7 +171,7 @@ const run = async (
     podcast.title = metadata?.title[0] //data?.meta?.title
     podcast.image = metadata['itunes:image'][0].$.href // data?.meta?.imageURL
     podcast.description = metadata?.description[0] //data?.meta?.description
-    podcast.directus_image = tempImageId
+    podcast.podcasts_image = tempImageId
 
     await updatePodcast(podcastId, podcast, podcastService)
   } catch (error) {
@@ -180,7 +180,7 @@ const run = async (
 }
 
 // Function to schedule podcasts
-const podcaseScheduler = async (req: any, res: any, context: any) => {
+const podcaseScheduler = async (req: Request, context: ControllerOptions) => {
   const { getSchema, services } = context
   const { ItemsService } = services
   const schema = await getSchema()
@@ -194,8 +194,8 @@ const podcaseScheduler = async (req: any, res: any, context: any) => {
 
   console.time('START PODCASTS REFRESH')
   for (let i = 0; i < podcasts.length; i++) {
-    if (!podcasts[i].directus_image)
-      await run(podcasts[i]?.id, podcasts[i]?.rss_feed, context, req, res)
+    if (!podcasts[i].podcasts_image)
+      await run(podcasts[i]?.id, podcasts[i]?.rss_feed, context, req)
     console.log(`Finished ${i + 1} of ${podcasts.length}`)
   }
 

@@ -1,32 +1,6 @@
-/**
- * Interface representing a user.
- */
-interface User {
-  id: Promise<any>
-  email?: string | undefined
-  role?: {
-    id: string | undefined
-    app_access: boolean | undefined
-    admin_access: boolean | undefined
-  }
-}
+import { Accountability, Role, User } from '../utils/helper'
 
-/**
- * Interface representing a role.
- */
-interface Role {
-  id: string
-  name: string
-  app_access: boolean
-  admin_access: boolean
-}
-
-/**
- * Retrieves user(s) by email from the database.
- * @param {string} email - The email of the user to retrieve.
- * @param {any} usersService - The service used to interact with users.
- * @returns {Promise<User[]>} - A promise that resolves to an array of user(s) matching the email.
- */
+// Retrieves user(s) by email from the database.
 const getUserByEmail = async (
   email: string,
   usersService: any
@@ -41,35 +15,22 @@ const getUserByEmail = async (
   })
 }
 
-/**
- * Retrieves all roles from the database.
- * @param {any} rolesService - The service used to interact with roles.
- * @returns {Promise<Role[]>} - A promise that resolves to an array of all roles.
- */
+// Retrieves all roles from the database.
 const getAllRoles = async (rolesService: any): Promise<Role[]> => {
   return await rolesService.readByQuery({
     fields: ['id', 'name', 'app_access', 'admin_access']
   })
 }
 
-/**
- * Creates a new user in the database.
- * @param {any} req - The request object.
- * @param {string} email - The email of the user.
- * @param {string | undefined} id - The ID of the user.
- * @param {Role | undefined} foundRole - The role of the user.
- * @param {string | undefined} organization - The organization of the user.
- * @param {any} usersService - The service used to interact with users.
- * @returns {Promise<any>} - A promise that resolves to the ID of the created user.
- */
+// Creates a new user in the database.
 const createUser = async (
-  req: any,
+  req: Request,
   email: string,
   id: string | undefined,
   foundRole: Role | undefined,
   organization: string | undefined,
   usersService: any
-): Promise<any> => {
+): Promise<User> => {
   const userData: any = {
     email,
     provider: 'email',
@@ -82,49 +43,39 @@ const createUser = async (
   return await usersService.createOne(userData)
 }
 
-/**
- * Updates a user in the database.
- * @param {any} req - The request object.
- * @param {User} user - The user object to update.
- * @param {string | undefined} id - The ID of the user.
- * @param {Role | undefined} foundRole - The role of the user.
- * @param {string | undefined} organization - The organization of the user.
- * @param {any} usersService - The service used to interact with users.
- * @returns {Promise<any>} - A promise that resolves once the user is updated.
- */
+// Updates a user in the database.
 const updateUser = async (
-  req: any,
+  req: Request,
   user: User,
   id: string | undefined,
-  foundRole: Role | undefined,
+  foundRole: { id: string } | undefined,
   organization: string | undefined,
   usersService: any
-): Promise<any> => {
-  const userData: any = {
+): Promise<User> => {
+  const userData: User = {
     name: req?.body?.name
   }
   if (id) userData.linked_user = id
-  if (foundRole?.id) userData.role = foundRole.id
+  if (foundRole?.id) {
+    // Construct the role object
+    userData.role = {
+      id: foundRole.id,
+      app_access: undefined,
+      admin_access: undefined
+    }
+  }
   if (organization) userData.organization = organization
 
   return await usersService.updateOne(user.id, userData)
 }
 
-/**
- * Creates a session for a user in the database.
- * @param {any} sessionService - The service used to interact with sessions.
- * @param {string | undefined} accessToken - The access token for the session.
- * @param {User | undefined} user - The user for whom the session is created.
- * @param {Date} expiresDateTime - The expiry date and time of the session.
- * @param {any} accountability - The accountability data for the session.
- * @returns {Promise<void>} - A promise that resolves once the session is created.
- */
+// Creates a session for a user in the database.
 const createSession = async (
   sessionService: any,
   accessToken: string | undefined,
   user: User | undefined,
   expiresDateTime: Date,
-  accountability: any
+  accountability: Accountability
 ): Promise<void> => {
   await sessionService.createOne({
     token: accessToken,
@@ -135,17 +86,11 @@ const createSession = async (
   })
 }
 
-/**
- * Creates an activity record for a user in the database.
- * @param {any} activityService - The service used to interact with activity records.
- * @param {User | undefined} user - The user for whom the activity record is created.
- * @param {any} accountability - The accountability data for the activity.
- * @returns {Promise<void>} - A promise that resolves once the activity record is created.
- */
+// Creates an activity record for a user in the database.
 const createActivity = async (
   activityService: any,
   user: User | undefined,
-  accountability: any
+  accountability: Accountability
 ): Promise<void> => {
   await activityService.createOne({
     action: 'login',

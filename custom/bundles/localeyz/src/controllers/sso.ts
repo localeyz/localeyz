@@ -6,29 +6,13 @@ import {
   getUserByEmail,
   updateUser
 } from '../daos/sso'
-
-// Define types for request and response objects
-interface UserLoginRequest {
-  ip: string
-  get(header: string): string
-  body: {
-    id?: string
-    email?: string
-    organization?: string
-    role?: string
-    token?: string
-  }
-}
-
-interface UserLoginResponse {
-  send(data: any): void
-}
+import { ControllerOptions } from '../utils/helper'
 
 // Function to handle user login
 const userLogin = async (
-  req: UserLoginRequest,
-  res: UserLoginResponse,
-  { services, database, getSchema }: any
+  req: Request,
+  res: Response,
+  { services, database, getSchema }: ControllerOptions
 ) => {
   const { UsersService, ItemsService, ActivityService } = services // Destructure services
   const schema = await getSchema() // Get schema

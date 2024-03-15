@@ -12,7 +12,7 @@ const uploadImage = async (
   imageId: string,
   field: string,
   service: any
-): Promise<any> => {
+): Promise<string> => {
   return await service.updateOne(keys, {
     [field]: imageId
   })

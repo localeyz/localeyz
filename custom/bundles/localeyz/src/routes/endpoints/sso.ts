@@ -1,29 +1,17 @@
+import { Request, Response, Router } from 'express' // Assuming you're using Express for routing
 import { userLogin } from '../../controllers/sso'
+import { ControllerOptions } from '../../utils/helper'
 
-/**
- * Module representing the SSO (Single Sign-On) controller.
- */
 export default {
-  /**
-   * Identifier for the SSO controller.
-   */
+  // Unique identifier for this route handler
   id: 'sso',
-
-  /**
-   * Handler function for the SSO controller.
-   * @param {any} router - The router object to handle HTTP requests.
-   * @param {object} options - Options object containing services, database, and getSchema.
-   */
+  // Handler function responsible for setting up the route
   handler: (
-    router: any,
-    {
-      services,
-      database,
-      getSchema
-    }: { services: any; database: any; getSchema: any }
+    router: Router,
+    { services, database, getSchema }: ControllerOptions
   ) => {
     // Define the route for handling user login
-    router.post('/login', async (req: any, res: any) => {
+    router.post('/login', async (req: Request, res: Response) => {
       // Call the userLogin function from the SSO controller
       await userLogin(req, res, { services, database, getSchema })
     })

@@ -2,9 +2,14 @@ import axios from 'axios'
 import jwt from 'jsonwebtoken'
 import { ACCOUNTABILITY, SECRET, PUBLIC_URL } from '../utils/config'
 import { fetchData, uploadImage } from '../daos/global'
+import { Accountability, ControllerOptions, Keys } from '../utils/helper'
 
 // Function responsible for creating the group images
-const globalImage = async (req: any, res: any, keys: any, context: any) => {
+const globalImage = async (
+  req: Request,
+  keys: Keys[],
+  context: ControllerOptions
+) => {
   try {
     const { getSchema, services } = context
     const { ItemsService } = services
@@ -47,7 +52,7 @@ const globalImage = async (req: any, res: any, keys: any, context: any) => {
       if (collection === 'episodes') {
         await uploadImage(key, imageId, 'thumbnail', service)
       } else {
-        const imageFieldName = collection + `_image`
+        const imageFieldName = collection + '_image'
         await uploadImage(key, imageId, imageFieldName, service)
       }
     }
@@ -57,7 +62,7 @@ const globalImage = async (req: any, res: any, keys: any, context: any) => {
 }
 
 // Function responsible for running the cron job to create group image
-const globalImageScheduler = async (req: any, res: any, context: any) => {
+const globalImageScheduler = async (context: ControllerOptions) => {
   try {
     console.log('START GLOBAL IMAGE REFRESH')
     const { getSchema, services } = context
@@ -87,7 +92,7 @@ const globalImageScheduler = async (req: any, res: any, context: any) => {
 }
 
 // Function to create JWT token
-const createJwtToken = (accountability: any) => {
+const createJwtToken = (accountability: Accountability) => {
   const { user, role, admin, app } = accountability
   const id = user
 
@@ -140,13 +145,13 @@ const handler = async ({
 }
 
 // Processes a collection based on its type, extracting relevant image data and uploading it.
-const processCollection = async (collection: any, service: any) => {
+const processCollection = async (collection: string, service: any) => {
   if (collection === 'episodes') {
     // Process episodes collection by chunking thumbnail URLs and uploading thumbnails
     await chunkProcess('thumbnail_url', 'thumbnail', service)
   } else {
     // For other collections, determine the image field name based on collection type
-    const imageFieldName = collection + `_image`
+    const imageFieldName = collection + '_image'
     // If the collection is 'producer_portal_widgets', process image URLs, otherwise process images directly
     await chunkProcess(
       collection === 'producer_portal_widgets' ? 'image_url' : 'image',
@@ -172,27 +177,34 @@ const chunkProcess = async (
 
     // Process each item in the batch concurrently
     await Promise.all(
-      batch.map(async (item: any) => {
-        const url = item.thumbnail_url || item.image || item.image_url // Extract the URL from the item's fields
+      batch.map(
+        async (item: {
+          thumbnail_url: string
+          image: string
+          image_url: string
+          id: string
+        }) => {
+          const url = item.thumbnail_url || item.image || item.image_url // Extract the URL from the item's fields
 
-        // Check if the URL is valid
-        if (typeof url === 'string') {
-          const token = createJwtToken(ACCOUNTABILITY) // Create a JWT token for Admin accountability
+          // Check if the URL is valid
+          if (typeof url === 'string') {
+            const token = createJwtToken(ACCOUNTABILITY) // Create a JWT token for Admin accountability
 
-          // Request image processing and get the image ID asynchronously
-          const imageId = await handler({
-            url,
-            user: ACCOUNTABILITY?.user,
-            token
-          })
+            // Request image processing and get the image ID asynchronously
+            const imageId = await handler({
+              url,
+              user: ACCOUNTABILITY?.user,
+              token
+            })
 
-          // If image ID is obtained, upload it to the service
-          if (imageId) {
-            // Upload the image ID to the service
-            await uploadImage(item.id, imageId, imageField, service)
+            // If image ID is obtained, upload it to the service
+            if (imageId) {
+              // Upload the image ID to the service
+              await uploadImage(item.id, imageId, imageField, service)
+            }
           }
         }
-      })
+      )
     )
     offset += chunkSize // Move to the next chunk by increasing the offset
   } while (batch.length === chunkSize) // Continue until no more records are fetched in the batch

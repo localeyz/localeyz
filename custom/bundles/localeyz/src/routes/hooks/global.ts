@@ -1,20 +1,24 @@
 import { globalImage, globalImageScheduler } from '../../controllers/global'
+import { ControllerOptions, Cron, Keys } from '../../utils/helper'
 
 // This function is a middleware that handles image uploads for creating and updating items.
-export default ({ action, schedule }: any, context: any) => {
+export default ({ action, schedule }: Cron, context: ControllerOptions) => {
   // Action to create items
-  action('items.create', async (keys: any, req: any, res: any) => {
-    await globalImage(req, res, keys, context)
+  action('items.create', async (keys: Keys, req: Request, _res: Response) => {
+    await globalImage(req, keys, context)
   })
 
   // Action to update items
-  action('items.update', async (keys: any, req: any, res: any) => {
-    await globalImage(req, res, keys, context)
+  action('items.update', async (keys: Keys, req: Request, _res: Response) => {
+    await globalImage(req, keys, context)
   })
 
   // Scheduler to update images for existing data which execute at 00:00 on Friday
-  schedule('0 0 * * 5', async (req: any, res: any) => {
-    // Execute the podcaseScheduler function from the podcasts controller
-    await globalImageScheduler(req, res, context)
-  })
+  schedule(
+    '0 0 * * 5',
+    async (_keys: string[], _req: Request, _res: Response) => {
+      // Execute the globalImageScheduler function from the global controller
+      await globalImageScheduler(context)
+    }
+  )
 }
