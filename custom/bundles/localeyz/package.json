@@ -23,11 +23,6 @@
       },
       {
         "type": "hook",
-        "name": "users",
-        "source": "src/routes/hooks/users.ts"
-      },
-      {
-        "type": "hook",
         "name": "podcasts",
         "source": "src/routes/hooks/podcasts.ts"
       },
