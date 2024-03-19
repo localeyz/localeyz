@@ -115,10 +115,12 @@ const telvueSync = async (
       const telvueId = episodeData.telvue_id
 
       if (telvueId) {
+        console.log({ telvueId })
         // If telvueId exists, update Telvue content
-        await axios.post(
+        const data = await axios.post(
           `${TELVUE_URL}/content_api/${telvueId}/edit?program_code=${telvueParams.program_code}&program=${telvueParams.program}&episode_code=${telvueParams.episode_code}&episode=${telvueParams.episode}&description=${telvueParams.description}&expected_duration=${telvueParams.expected_duration}&expected_filename=${telvueParams.expected_filename}&location=here&contributor=${telvueParams.contributor}&import_datetime=${telvueParams.import_datetime}&delete_datetime=${telvueParams.delete_datetime}&categories[]=${telvueParams.categories}&${telvueParams.custom_metadata}&api_key=${telvueParams.api_key}`
         )
+        console.log({ data })
         await createNotification(
           userData.id,
           'Telvue Updates',

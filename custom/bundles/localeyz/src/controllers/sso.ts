@@ -12,9 +12,9 @@ import { ControllerOptions } from '../utils/helper'
 const userLogin = async (
   req: Request,
   res: Response,
-  { services, database, getSchema }: ControllerOptions
+  { services, getSchema }: ControllerOptions
 ) => {
-  const { UsersService, ItemsService, ActivityService } = services // Destructure services
+  const { ItemsService } = services // Destructure services
   const schema = await getSchema() // Get schema
 
   // Check if email is present in request body
@@ -40,15 +40,15 @@ const userLogin = async (
   }
 
   // Initialize ActivityService with schema and database
-  const activityService = new ActivityService({
-    schema,
-    knex: database
+  const activityService = new ItemsService('directus_activity', {
+    accountability,
+    schema: await getSchema()
   })
 
   // Initialize UsersService with schema and database
-  const usersService = new UsersService({
-    schema,
-    knex: database
+  const usersService = new ItemsService('directus_users', {
+    accountability,
+    schema: await getSchema()
   })
 
   // Get user by email from the database
@@ -94,8 +94,8 @@ const userLogin = async (
     } else {
       await updateUser(req, user, id, foundRole, organization, usersService) // Update user if found
     }
-  } catch (e: any) {
-    console.log('CUSTOM OAUTH UPDATE / INSERT ERROR', e.message)
+  } catch (error: any) {
+    console.log('CUSTOM OAUTH UPDATE / INSERT ERROR', error.message)
   }
 
   try {
@@ -116,8 +116,8 @@ const userLogin = async (
 
     // Log activity
     await createActivity(activityService, user, accountability)
-  } catch (e: any) {
-    console.log('CUSTOM OAUTH SESSION ERROR', e.message)
+  } catch (error: any) {
+    console.log('CUSTOM OAUTH SESSION ERROR', error.message)
   }
 
   // Send response with user data

@@ -1,3 +1,5 @@
+import { ItemsService } from '../utils/helper'
+
 /**
  * Uploads an image to a service.
  *
@@ -11,7 +13,7 @@ const uploadImage = async (
   keys: string,
   imageId: string,
   field: string,
-  service: any
+  service: ItemsService
 ): Promise<string> => {
   return await service.updateOne(keys, {
     [field]: imageId
@@ -31,7 +33,7 @@ const uploadImage = async (
 const fetchData = async (
   urlField: string,
   imageField: string,
-  service: any,
+  service: ItemsService,
   chunkSize: number,
   offset: number
 ) => {
@@ -45,7 +47,8 @@ const fetchData = async (
       },
       [imageField]: {
         _nnull: false // Filter image fields that are not null
-      }
+      },
+      _and: []
     },
     limit: chunkSize, // Limit the number of records fetched per request
     offset // Start fetching records from this offset

@@ -1,8 +1,8 @@
 import xml2js from 'xml2js'
-import { Episode } from '../utils/helper'
+import { Episode, ItemsService } from '../utils/helper'
 
 // Function to fetch user data based on user ID
-const getUserData = async (user: string, usersService: any) => {
+const getUserData = async (user: string, usersService: ItemsService) => {
   return await usersService.readSingleton({
     filter: {
       id: user
@@ -13,7 +13,7 @@ const getUserData = async (user: string, usersService: any) => {
 // Function to fetch Telvue server data based on organization ID
 const getTelvueServerData = async (
   organizationId: string,
-  telvueService: any
+  telvueService: ItemsService
 ) => {
   return await telvueService.readSingleton({
     filter: {
@@ -23,7 +23,10 @@ const getTelvueServerData = async (
 }
 
 // Function to fetch episode data based on episode ID
-const getEpisodeData = async (episode: string, episodesService: any) => {
+const getEpisodeData = async (
+  episode: string,
+  episodesService: ItemsService
+) => {
   return await episodesService.readSingleton({
     fields: ['*', 'topics.topic_id.title'],
     filter: {
@@ -33,7 +36,10 @@ const getEpisodeData = async (episode: string, episodesService: any) => {
 }
 
 // Function to fetch program data based on program ID
-const getProgramData = async (programId: string, programsService: any) => {
+const getProgramData = async (
+  programId: string,
+  programsService: ItemsService
+) => {
   return await programsService.readSingleton({
     filter: {
       id: programId
@@ -42,7 +48,10 @@ const getProgramData = async (programId: string, programsService: any) => {
 }
 
 // Function to fetch producer data based on producer ID
-const getProducerData = async (producerId: string, usersService: any) => {
+const getProducerData = async (
+  producerId: string,
+  usersService: ItemsService
+) => {
   return await usersService.readSingleton({
     filter: {
       id: producerId
@@ -54,7 +63,7 @@ const getProducerData = async (producerId: string, usersService: any) => {
 const updateEpisode = async (
   id: string,
   condition: object,
-  episodesService: any
+  episodesService: ItemsService
 ) => {
   return await episodesService.updateOne(id, condition)
 }
@@ -66,7 +75,7 @@ const createNotification = async (
   message: string,
   collection: string,
   item: string,
-  notificationService: any
+  notificationService: ItemsService
 ) => {
   return await notificationService.createOne({
     status: 'inbox',
@@ -94,7 +103,7 @@ const fetchTelvueId = async (data: string) => {
 }
 
 // Function to get all telvue_data
-const getTelvueData = async (telvueService: any) => {
+const getTelvueData = async (telvueService: ItemsService) => {
   return await telvueService.readByQuery({
     filter: {
       has_connect: true,
@@ -106,7 +115,7 @@ const getTelvueData = async (telvueService: any) => {
 
 const getTelvueEpisodeData = async (
   organizationId: string,
-  episodeService: any
+  episodeService: ItemsService
 ) => {
   return await episodeService.readByQuery({
     fields: ['id'],
@@ -131,7 +140,7 @@ const getTelvueEpisodeData = async (
 
 const createTelvueQueue = async (
   episodes: Episode,
-  telvueQueueService: any
+  telvueQueueService: ItemsService
 ) => {
   const queueData = await telvueQueueData(-1, telvueQueueService)
   return episodes.map(async (episode: { episode_id: string }) => {
@@ -142,7 +151,10 @@ const createTelvueQueue = async (
   })
 }
 
-const telvueQueueData = async (limit: number, telvueQueueService: any) => {
+const telvueQueueData = async (
+  limit: number,
+  telvueQueueService: ItemsService
+) => {
   const queueData = await telvueQueueService.readByQuery({
     fields: ['episode_id'],
     limit
@@ -165,7 +177,7 @@ const fetchTelvueConnectData = async (data: string) => {
   return { telvue_connect_id, stream_url }
 }
 
-const deleteTelvueQueue = async (telvueQueueService: any) => {
+const deleteTelvueQueue = async (telvueQueueService: ItemsService) => {
   return await telvueQueueService.deleteByQuery({
     limit: 100
   })

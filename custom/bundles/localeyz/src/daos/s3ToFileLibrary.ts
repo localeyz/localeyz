@@ -1,4 +1,4 @@
-import { Episode } from '../utils/helper'
+import { Episode, ItemsService } from '../utils/helper'
 
 //  Checks if a given URL string is valid.
 const isURLValid = (url: string): boolean => {
@@ -14,7 +14,7 @@ const isURLValid = (url: string): boolean => {
 const updateEpisode = async (
   keys: string,
   data: Episode,
-  episodesService: any
+  episodesService: ItemsService
 ): Promise<void> => {
   await episodesService.updateOne(keys, data)
 }

@@ -1,17 +1,32 @@
 // Type definition for scheduling tasks
 type Schedule = (
   cronTab: string,
-  callback: (keys: string[], req: Request, res: Response) => Promise<any> // Schedule callback function signature
+  callback: (
+    keys?: string[],
+    req?: Request | undefined,
+    res?: Response | undefined
+  ) => Promise<any> // Schedule callback function signature
 ) => void
 
 // Type definition for triggering actions
 type Action = (
   eventName: string,
-  callback: (keys: Object, req: Request, res: Response) => Promise<void> // Action callback function signature
+  callback: (
+    keys: Keys,
+    req?: Request | undefined,
+    res?: Response | undefined
+  ) => Promise<void> // Updated action callback function signature
 ) => void
 
 // Interface for the ItemsService constructor
 interface ItemsService {
+  deleteMany: any
+  readSingleton: any
+  createOne: any
+  createMany: any
+  deleteByQuery: any
+  readByQuery: any
+  updateOne: any
   new (collection: string, options: any): any
 }
 
@@ -20,7 +35,7 @@ interface ControllerOptions {
   services: {
     ItemsService: ItemsService // Controller options for services
   }
-  database?: Object // Optional database object
+  // database?: Object // Optional database object
   getSchema: () => Promise<any> // Function to get schema as a promise
 }
 
@@ -124,11 +139,8 @@ interface User {
   name?: string
   id?: Promise<any>
   email?: string | undefined
-  role?: {
-    id: string | undefined
-    app_access: boolean | undefined
-    admin_access: boolean | undefined
-  }
+  role?: Role
+  provider?: string
 }
 
 /**
@@ -150,6 +162,8 @@ interface Keys {
     image?: string
     image_url?: string
     thumbnail_url?: string
+    skipRecursion?: boolean
+    rss_feed?: string
   }
 }
 
@@ -162,5 +176,6 @@ export type {
   Podcast,
   User,
   Role,
-  Keys
+  Keys,
+  ItemsService
 }

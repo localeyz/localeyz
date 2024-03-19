@@ -1,9 +1,9 @@
 import xml2js from 'xml2js'
-import { Podcast, PodcastEpisode } from '../utils/helper'
+import { ItemsService, Podcast, PodcastEpisode } from '../utils/helper'
 
 // Update the directus_image field of a podcast in the database.
 const updatePodcastImage = async (
-  podcastService: any,
+  podcastService: ItemsService,
   keys: string,
   imageId: string
 ): Promise<string> => {
@@ -15,7 +15,7 @@ const updatePodcastImage = async (
 // Retrieve episodes of a podcast from the database.
 const getPodcastEpisodes = async (
   podcastId: string,
-  podcastEpisodesService: any
+  podcastEpisodesService: ItemsService
 ): Promise<{ id: string }> => {
   return await podcastEpisodesService.readByQuery({
     fields: ['id'],
@@ -29,7 +29,7 @@ const getPodcastEpisodes = async (
 //  Delete podcast episodes from the database.
 const deletePodcastEpisodes = async (
   toDelete: string[],
-  podcastEpisodesService: any
+  podcastEpisodesService: ItemsService
 ): Promise<void> => {
   return await podcastEpisodesService.deleteByQuery({
     filter: {
@@ -44,7 +44,7 @@ const deletePodcastEpisodes = async (
 //Create podcast episodes in the database.
 const createPodcastEpisodes = async (
   episodesToCreate: PodcastEpisode[],
-  podcastEpisodesService: any
+  podcastEpisodesService: ItemsService
 ): Promise<string[]> => {
   return await podcastEpisodesService.createMany(episodesToCreate)
 }
@@ -53,13 +53,15 @@ const createPodcastEpisodes = async (
 const updatePodcast = async (
   podcastId: string,
   podcast: Podcast,
-  podcastService: any
+  podcastService: ItemsService
 ): Promise<string> => {
   return await podcastService.updateOne(podcastId, podcast)
 }
 
 // Retrieve all podcasts from the database.
-const getPodcasts = async (podcastService: any): Promise<Podcast[]> => {
+const getPodcasts = async (
+  podcastService: ItemsService
+): Promise<Podcast[]> => {
   return await podcastService.readByQuery({
     fields: ['id', 'rss_feed', 'podcasts_image'],
     limit: -1

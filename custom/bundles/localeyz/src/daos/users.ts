@@ -1,3 +1,5 @@
+import { ItemsService } from '../utils/helper'
+
 /**
  * Interface representing a role.
  */
@@ -31,7 +33,7 @@ interface User {
  * @param {any} rolesService - The service used to interact with roles.
  * @returns {Promise<Role[]>} - A promise that resolves to an array of all roles.
  */
-const getAllRoles = async (rolesService: any): Promise<Role[]> => {
+const getAllRoles = async (rolesService: ItemsService): Promise<Role[]> => {
   return await rolesService.readByQuery({ fields: ['id', 'name'] })
 }
 
@@ -43,7 +45,7 @@ const getAllRoles = async (rolesService: any): Promise<Role[]> => {
  */
 const getDirectusUserByEmail = async (
   email: string,
-  directusUsersService: any
+  directusUsersService: ItemsService
 ): Promise<User | undefined> => {
   const users = await directusUsersService.readByQuery({
     fields: [
@@ -67,7 +69,7 @@ const getDirectusUserByEmail = async (
  */
 const getUserByEmail = async (
   email: string,
-  userItems: any
+  userItems: ItemsService
 ): Promise<User | undefined> => {
   const users = await userItems.readByQuery({
     fields: [
@@ -93,7 +95,7 @@ const getUserByEmail = async (
 const createUser = async (
   user: User,
   foundRole: Role | undefined,
-  directusUsersService: any
+  directusUsersService: ItemsService
 ): Promise<any> => {
   return await directusUsersService.createOne({
     first_name: user.firstname,
@@ -111,7 +113,10 @@ const createUser = async (
  * @param {any} userItems - The service used to interact with user items.
  * @returns {Promise<any>} - A promise that resolves to the user matching the ID.
  */
-const getUser = async (userId: string, userItems: any): Promise<any> => {
+const getUser = async (
+  userId: string,
+  userItems: ItemsService
+): Promise<any> => {
   return await userItems.readByQuery({
     fields: ['id', 'email'],
     filter: {
@@ -130,7 +135,7 @@ const getUser = async (userId: string, userItems: any): Promise<any> => {
  */
 const findUserToBeDeleted = async (
   userQuery: any[],
-  directusUsersService: any
+  directusUsersService: ItemsService
 ): Promise<any[]> => {
   return await directusUsersService.readByQuery({
     fields: ['id'],
@@ -150,7 +155,7 @@ const findUserToBeDeleted = async (
  */
 const deleteUsers = async (
   toDelete: any[],
-  directusUsersService: any
+  directusUsersService: ItemsService
 ): Promise<any> => {
   return await directusUsersService.deleteMany(toDelete)
 }

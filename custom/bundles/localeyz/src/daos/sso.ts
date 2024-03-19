@@ -1,9 +1,9 @@
-import { Accountability, Role, User } from '../utils/helper'
+import { Accountability, ItemsService, Role, User } from '../utils/helper'
 
 // Retrieves user(s) by email from the database.
 const getUserByEmail = async (
   email: string,
-  usersService: any
+  usersService: ItemsService
 ): Promise<User[]> => {
   return await usersService.readByQuery({
     fields: ['*', 'role.*'],
@@ -16,7 +16,7 @@ const getUserByEmail = async (
 }
 
 // Retrieves all roles from the database.
-const getAllRoles = async (rolesService: any): Promise<Role[]> => {
+const getAllRoles = async (rolesService: ItemsService): Promise<Role[]> => {
   return await rolesService.readByQuery({
     fields: ['id', 'name', 'app_access', 'admin_access']
   })
@@ -29,7 +29,7 @@ const createUser = async (
   id: string | undefined,
   foundRole: Role | undefined,
   organization: string | undefined,
-  usersService: any
+  usersService: ItemsService
 ): Promise<User> => {
   const userData: any = {
     email,
@@ -50,7 +50,7 @@ const updateUser = async (
   id: string | undefined,
   foundRole: { id: string } | undefined,
   organization: string | undefined,
-  usersService: any
+  usersService: ItemsService
 ): Promise<User> => {
   const userData: User = {
     name: req?.body?.name
@@ -71,7 +71,7 @@ const updateUser = async (
 
 // Creates a session for a user in the database.
 const createSession = async (
-  sessionService: any,
+  sessionService: ItemsService,
   accessToken: string | undefined,
   user: User | undefined,
   expiresDateTime: Date,
@@ -88,7 +88,7 @@ const createSession = async (
 
 // Creates an activity record for a user in the database.
 const createActivity = async (
-  activityService: any,
+  activityService: ItemsService,
   user: User | undefined,
   accountability: Accountability
 ): Promise<void> => {

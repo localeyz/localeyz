@@ -11,11 +11,8 @@ export default (
   { getSchema, services }: ControllerOptions
 ) => {
   // Schedule the task to run at 12:00 AM and 12:00 PM every day
-  schedule(
-    '0 0,12 * * *',
-    async (keys: string[], _req: Request, _res: Response) => {
-      // Call the deleteAwsVideo function from the deleteAwsVideo controller
-      await deleteAwsVideo(keys, { getSchema, services })
-    }
-  )
+  schedule('0 0,12 * * *', async (keys?: string[]) => {
+    // Call the deleteAwsVideo function from the deleteAwsVideo controller
+    await deleteAwsVideo(keys, { getSchema, services })
+  })
 }

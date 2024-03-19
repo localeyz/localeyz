@@ -1,11 +1,13 @@
-import { Episode } from '../utils/helper'
+import { Episode, ItemsService } from '../utils/helper'
 
 /**
  * Retrieves episodes with non-null and non-empty video URLs.
  * @param {any} episodeService - The service used to interact with episodes.
  * @returns {Promise<Episode[]>} - A promise that resolves to episodes with non-null and non-empty video URLs.
  */
-const getEpisodes = async (episodeService: any): Promise<Episode[]> => {
+const getEpisodes = async (
+  episodeService: ItemsService
+): Promise<Episode[]> => {
   return await episodeService.readByQuery({
     filter: {
       _and: [
