@@ -23,11 +23,6 @@
       },
       {
         "type": "hook",
-        "name": "s3-to-file-library",
-        "source": "src/routes/hooks/s3ToFileLibraryHooks.ts"
-      },
-      {
-        "type": "hook",
         "name": "users",
         "source": "src/routes/hooks/users.ts"
       },
