@@ -1,0 +1,48 @@
+{
+  "name": "localeyz-directus-extension",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A Directus extension tailored for Localeyz, enabling seamless integration and management of multilingual content.",
+  "main": "index.js",
+  "scripts": {
+    "start": "directus start",
+    "stag": "pnpm run build && directus start",
+    "build": "cd ./custom/bundles/localeyz/ && pnpm install && pnpm run build",
+    "setup-db": "npx directus bootstrap",
+    "directus:schema:apply": "npx directus schema apply schema/schema.yaml",
+    "directus:schema:snapshot": "npx directus schema snapshot --yes schema/schema.yaml && mkdir -p schema/previous && cp schema/schema.yaml schema/previous/$(date +'%Y%m%d%H%M%S')-schema.yaml",
+    "format": "prettier --write .",
+    "lint": "eslint ."
+  },
+  "packageManager": "pnpm@8.15.4",
+  "engines": {
+    "node": ">=18.16.0",
+    "pnpm": "~8.15"
+  },
+  "keywords": [
+    "directus",
+    "extension",
+    "localeyz",
+    "bundles"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "directus": "^10.8.2",
+    "directus-extension-localeyz": "link:custom/bundles/localeyz",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.11.3",
+    "podcast-feed-parser": "^1.0.4",
+    "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "git-commit-msg-linter": "^5.0.7",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.2"
+  }
+}

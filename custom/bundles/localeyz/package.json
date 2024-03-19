@@ -1,0 +1,75 @@
+{
+  "name": "directus-extension-localeyz",
+  "description": "Please enter a description for your extension",
+  "icon": "extension",
+  "version": "1.0.0",
+  "keywords": [
+    "directus",
+    "directus-extension",
+    "directus-custom-bundle"
+  ],
+  "type": "module",
+  "directus:extension": {
+    "type": "bundle",
+    "path": {
+      "app": "dist/app.js",
+      "api": "dist/api.js"
+    },
+    "entries": [
+      {
+        "type": "hook",
+        "name": "delete-aws-video",
+        "source": "src/routes/hooks/deleteAwsVideoHooks.ts"
+      },
+      {
+        "type": "hook",
+        "name": "users",
+        "source": "src/routes/hooks/users.ts"
+      },
+      {
+        "type": "hook",
+        "name": "podcasts",
+        "source": "src/routes/hooks/podcasts.ts"
+      },
+      {
+        "type": "endpoint",
+        "name": "sso",
+        "source": "src/routes/endpoints/sso.ts"
+      },
+      {
+        "type": "endpoint",
+        "name": "telvue",
+        "source": "src/routes/endpoints/telvue.ts"
+      },
+      {
+        "type": "hook",
+        "name": "telvueConnect",
+        "source": "src/routes/hooks/telvueConnect.ts"
+      },
+      {
+        "type": "hook",
+        "name": "global",
+        "source": "src/routes/hooks/global.ts"
+      }
+    ],
+    "host": "^10.3.1"
+  },
+  "scripts": {
+    "build": "directus-extension build",
+    "dev": "directus-extension build -w --no-minify",
+    "link": "directus-extension link",
+    "add": "directus-extension add"
+  },
+  "devDependencies": {
+    "@directus/extensions-sdk": "10.3.1",
+    "@types/uuid": "^9.0.8",
+    "@types/xml2js": "^0.4.14"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.529.1",
+    "axios": "^1.6.7",
+    "dotenv": "^16.4.5",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^9.0.1"
+  }
+}
