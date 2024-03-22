@@ -28,7 +28,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "directus": "^10.8.2",
+    "directus": "^10.10.4",
     "directus-extension-localeyz": "link:custom/bundles/localeyz",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.11.3",
