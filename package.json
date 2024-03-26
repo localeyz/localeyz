@@ -5,7 +5,7 @@
   "description": "A Directus extension tailored for Localeyz, enabling seamless integration and management of multilingual content.",
   "main": "index.js",
   "scripts": {
-    "start": "directus start",
+    "start": "pnpm i && pnpm run build && directus start",
     "stag": "pnpm i && pnpm run build && pm2 restart 4",
     "build": "cd ./custom/bundles/localeyz/ && pnpm install && pnpm run build",
     "setup-db": "npx directus bootstrap",
@@ -32,7 +32,6 @@
     "directus-extension-localeyz": "link:custom/bundles/localeyz",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.11.3",
-    "podcast-feed-parser": "^1.0.4",
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
