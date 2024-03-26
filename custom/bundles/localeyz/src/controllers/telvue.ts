@@ -86,7 +86,7 @@ const telvueSync = async (
         episode_code: episodeData.telvue_episode_code,
         episode: episodeData.title,
         description: episodeData.full_description,
-        expected_duration: episodeData.time
+        expected_duration: episodeData.duration
           ?.split(':')
           .reduce(
             (acc: number, val: number, i: number | string) =>
@@ -94,7 +94,6 @@ const telvueSync = async (
             0
           ),
         expected_filename: episodeData.telvue_file_name,
-        location: 'here',
         contributor: producerData.first_name + ' ' + producerData.last_name,
         import_datetime: episodeData.telvue_ingest_date_time?.split('T')[0],
         delete_datetime: episodeData.telvue_delete_at?.split('T')[0],
@@ -106,10 +105,11 @@ const telvueSync = async (
           .join('&'),
         custom_metadata: episodeData.custom_field_value
           ? Object.entries(episodeData.custom_field_value)
-              ?.map(([key, value]) => `custom_metadata[${key}]=${value}`)
-              .join('&')
+            ?.map(([key, value]) => `custom_metadata[${key}]=${value}`)
+            .join('&')
           : null,
-        api_key: serverData.api_key
+        api_key: serverData.api_key,
+        short_summary: episodeData.short_description
       }
 
       const telvueId = episodeData.telvue_id
@@ -117,10 +117,9 @@ const telvueSync = async (
       if (telvueId) {
         console.log({ telvueId })
         // If telvueId exists, update Telvue content
-        const data = await axios.post(
-          `${TELVUE_URL}/content_api/${telvueId}/edit?program_code=${telvueParams.program_code}&program=${telvueParams.program}&episode_code=${telvueParams.episode_code}&episode=${telvueParams.episode}&description=${telvueParams.description}&expected_duration=${telvueParams.expected_duration}&expected_filename=${telvueParams.expected_filename}&location=here&contributor=${telvueParams.contributor}&import_datetime=${telvueParams.import_datetime}&delete_datetime=${telvueParams.delete_datetime}&categories[]=${telvueParams.categories}&${telvueParams.custom_metadata}&api_key=${telvueParams.api_key}`
+        await axios.post(
+          `${TELVUE_URL}/content_api/${telvueId}/edit?program_code=${telvueParams.program_code}&program=${telvueParams.program}&episode_code=${telvueParams.episode_code}&episode=${telvueParams.episode}&description=${telvueParams.description}&expected_duration=${telvueParams.expected_duration}&expected_filename=${telvueParams.expected_filename}&contributor=${telvueParams.contributor}&import_datetime=${telvueParams.import_datetime}&delete_datetime=${telvueParams.delete_datetime}&categories[]=${telvueParams.categories}&${telvueParams.custom_metadata}&short_summary=${telvueParams.short_summary}&api_key=${telvueParams.api_key}`
         )
-        console.log({ data })
         await createNotification(
           userData.id,
           'Telvue Updates',
@@ -132,7 +131,7 @@ const telvueSync = async (
       } else {
         // If telvueId doesn't exist, create new Telvue content
         const createTelvueContent = await axios.post(
-          `${TELVUE_URL}/content_api/new?program_code=${telvueParams.program_code}&program=${telvueParams.program}&episode_code=${telvueParams.episode_code}&episode=${telvueParams.episode}&description=${telvueParams.description}&expected_duration=${telvueParams.expected_duration}&expected_filename=${telvueParams.expected_filename}&location=here&contributor=${telvueParams.contributor}&import_datetime=${telvueParams.import_datetime}&delete_datetime=${telvueParams.delete_datetime}&categories[]=${telvueParams.categories}&${telvueParams.custom_metadata}&api_key=${telvueParams.api_key}`
+          `${TELVUE_URL}/content_api/new?program_code=${telvueParams.program_code}&program=${telvueParams.program}&episode_code=${telvueParams.episode_code}&episode=${telvueParams.episode}&description=${telvueParams.description}&expected_duration=${telvueParams.expected_duration}&expected_filename=${telvueParams.expected_filename}&contributor=${telvueParams.contributor}&import_datetime=${telvueParams.import_datetime}&delete_datetime=${telvueParams.delete_datetime}&categories[]=${telvueParams.categories}&${telvueParams.custom_metadata}&short_summary=${telvueParams.short_summary}&api_key=${telvueParams.api_key}`
         )
         if (createTelvueContent.data) {
           // If Telvue content creation is successful
