@@ -70,6 +70,7 @@ const globalImageScheduler = async (context: ControllerOptions) => {
     const schema = await getSchema()
 
     const collections = [
+      'podcasts',
       'groups',
       'organizations',
       'podcast_episodes',
