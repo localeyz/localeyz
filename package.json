@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "pnpm i && pnpm run build && directus start",
-    "stag": "pnpm i && pnpm run build && pm2 restart 4",
+    "stag": "pnpm i && pnpm run build && pm2 restart localeyz-v2",
     "build": "cd ./custom/bundles/localeyz/ && pnpm install && pnpm run build",
     "setup-db": "npx directus bootstrap",
     "directus:schema:apply": "npx directus schema apply schema/schema.yaml",
