@@ -28,33 +28,9 @@ const getEpisodeData = async (
   episodesService: ItemsService
 ) => {
   return await episodesService.readSingleton({
-    fields: ['*', 'topics.topic_id.title'],
+    fields: ['*', 'topics.topic_id.title', 'producer_id.*', 'program_id.*'],
     filter: {
       id: episode
-    }
-  })
-}
-
-// Function to fetch program data based on program ID
-const getProgramData = async (
-  programId: string,
-  programsService: ItemsService
-) => {
-  return await programsService.readSingleton({
-    filter: {
-      id: programId
-    }
-  })
-}
-
-// Function to fetch producer data based on producer ID
-const getProducerData = async (
-  producerId: string,
-  usersService: ItemsService
-) => {
-  return await usersService.readSingleton({
-    filter: {
-      id: producerId
     }
   })
 }
@@ -187,8 +163,6 @@ export {
   getUserData,
   getTelvueServerData,
   getEpisodeData,
-  getProgramData,
-  getProducerData,
   fetchTelvueId,
   createNotification,
   updateEpisode,

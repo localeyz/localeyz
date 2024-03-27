@@ -6,8 +6,6 @@ import {
   fetchTelvueConnectData,
   fetchTelvueId,
   getEpisodeData,
-  getProducerData,
-  getProgramData,
   getTelvueData,
   getTelvueEpisodeData,
   getTelvueServerData,
@@ -44,10 +42,6 @@ const telvueSync = async (
       schema: schema,
       adminAccountability
     })
-    const programsService = new ItemsService('programs', {
-      schema: schema,
-      accountability
-    })
     const notificationService = new ItemsService('directus_notifications', {
       schema: schema,
       adminAccountability
@@ -67,17 +61,8 @@ const telvueSync = async (
       // Fetching episode Details
       const episodeData = await getEpisodeData(episode, episodesService)
 
-      // Fetching program Details
-      const programData = await getProgramData(
-        episodeData.program_id,
-        programsService
-      )
-
-      // Fetching producer details
-      const producerData = await getProducerData(
-        episodeData.producer_id,
-        usersService
-      )
+      const programData = episodeData.program_id // Fetching program Details
+      const producerData = episodeData.producer_id // Fetching producer details
 
       // Creating params object to create/update the telvue content
       const telvueParams = {
@@ -105,8 +90,8 @@ const telvueSync = async (
           .join('&'),
         custom_metadata: episodeData.custom_field_value
           ? Object.entries(episodeData.custom_field_value)
-            ?.map(([key, value]) => `custom_metadata[${key}]=${value}`)
-            .join('&')
+              ?.map(([key, value]) => `custom_metadata[${key}]=${value}`)
+              .join('&')
           : null,
         api_key: serverData.api_key,
         short_summary: episodeData.short_description
@@ -115,7 +100,6 @@ const telvueSync = async (
       const telvueId = episodeData.telvue_id
 
       if (telvueId) {
-        console.log({ telvueId })
         // If telvueId exists, update Telvue content
         await axios.post(
           `${TELVUE_URL}/content_api/${telvueId}/edit?program_code=${telvueParams.program_code}&program=${telvueParams.program}&episode_code=${telvueParams.episode_code}&episode=${telvueParams.episode}&description=${telvueParams.description}&expected_duration=${telvueParams.expected_duration}&expected_filename=${telvueParams.expected_filename}&contributor=${telvueParams.contributor}&import_datetime=${telvueParams.import_datetime}&delete_datetime=${telvueParams.delete_datetime}&categories[]=${telvueParams.categories}&${telvueParams.custom_metadata}&short_summary=${telvueParams.short_summary}&api_key=${telvueParams.api_key}`
